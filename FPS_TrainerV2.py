@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter.messagebox import askyesno
 import sys
 import os
@@ -9,7 +10,9 @@ gui.title('FPS trainer')
 gui.geometry("{0}x{1}+0+0".format(gui.winfo_screenwidth(), gui.winfo_screenheight()))
 gui.config(bg="grey")
 label = tk.Label(gui)
+textbox = ttk.Entry(gui)
 
+temptimer = 0
 timer = 20
 points = 0
 randomPosition = random.randint(0, 500)
@@ -54,7 +57,8 @@ fg='white',bg='black')
 points_Label.place(x='1110')
 
 def addPoints(e):
-    global points
+    global points,var1
+    gui.unbind(buttonBinds[var1],funcid=None)
     var1 = random.randint(0,7)
     points += 1
     points_Label.config(text="Points: "+str(points))
@@ -98,10 +102,40 @@ def randombutton():
         )
     clickbutton.place(x=random.randint(0,500), y=random.randint(0,500))
 
+#tijd invoer
+entrytime = tk.Label(
+    gui,
+    text='Op hoeveel wil je de timer zetten? (standaard = 20)',
+    font=('arial',15),
+    padx=50,
+    pady=50
+) 
+temptimer = tk.Entry(gui)
+entrytime.pack(pady=50)
+temptimer.pack(pady=50)
+
+confirm = tk.Button(
+    gui,
+    text='Confirm',
+    font=('arial',15,'bold'),
+    fg='white',bg='black',
+    command= lambda:[starter(), confirm.destroy(), entrytime.destroy(), temptimer.destroy(), timecheck() ]
+)
+confirm.pack()
+
+def timecheck():
+    global temptimer, timer
+    timer = (temptimer.get())
+    if timer == '':
+        timer = 20
+    elif timer > '0':
+        timer == int(temptimer.get())
+
+
 #Restart
 def rerun():
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
-starter()
+
 gui.mainloop()
